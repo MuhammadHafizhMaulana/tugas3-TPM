@@ -13,14 +13,14 @@ class _RekomendasiPageState extends State<RekomendasiPage> {
   // Daftar situs rekomendasi
   final List<Map<String, String>> sites = [
     {
-      "title": "Flutter Official",
-      "url": "https://flutter.dev",
-      "image": "../assets/flutter_logo.png",
+      "title": "Space Elevator",
+      "url": "https://neal.fun/space-elevator/",
+      "image": "../assets/space.jpeg",
     },
     {
-      "title": "Dart Official",
-      "url": "https://dart.dev",
-      "image": "../assets/dart_logo.png",
+      "title": "Deep Sea",
+      "url": "https://neal.fun/deep-sea/",
+      "image": "../assets/deepsea.jpeg",
     },
     {
       "title": "Google",

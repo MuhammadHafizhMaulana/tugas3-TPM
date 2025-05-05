@@ -10,47 +10,46 @@ class StopwatchPage extends StatefulWidget {
 }
 
 class _StopwatchPageState extends State<StopwatchPage> {
-  int _seconds = 0; // Menyimpan waktu dalam detik
-  late Timer _timer; // Menyimpan Timer untuk kontrol
-  bool _isRunning = false; // Menyimpan status stopwatch (apakah sedang berjalan)
-  bool _isStopped = false; // Menyimpan status apakah stopwatch dihentikan
+  int _milliseconds = 0; // Menyimpan waktu dalam milidetik
+  Timer? _timer;
+  bool _isRunning = false;
+  bool _isStopped = false;
 
-  // Fungsi untuk memulai stopwatch
   void _startStopwatch() {
     setState(() {
       _isRunning = true;
       _isStopped = false;
     });
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       setState(() {
-        _seconds++;
+        _milliseconds += 10;
       });
     });
   }
 
-  // Fungsi untuk menghentikan stopwatch
   void _stopStopwatch() {
     setState(() {
       _isRunning = false;
       _isStopped = true;
     });
-    _timer.cancel();
+    _timer?.cancel();
   }
 
-  // Fungsi untuk mereset stopwatch
   void _resetStopwatch() {
     setState(() {
-      _seconds = 0; // Mengatur ulang detik ke 0
+      _milliseconds = 0;
       _isRunning = false;
       _isStopped = false;
     });
-    _timer.cancel(); // Menghentikan timer
+    _timer?.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    final String minutes = (_seconds ~/ 60).toString().padLeft(2, '0');
-    final String seconds = (_seconds % 60).toString().padLeft(2, '0');
+    final int totalSeconds = _milliseconds ~/ 1000;
+    final String minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
+    final String seconds = (totalSeconds % 60).toString().padLeft(2, '0');
+    final String milliseconds = ((_milliseconds % 1000) ~/ 10).toString().padLeft(2, '0');
 
     return Scaffold(
       appBar: AppBar(title: const Text("Stopwatch")),
@@ -60,7 +59,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "$minutes:$seconds",
+              "$minutes:$seconds:$milliseconds",
               style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
@@ -68,17 +67,17 @@ class _StopwatchPageState extends State<StopwatchPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: _isRunning ? null : _startStopwatch,  // Tombol Start hanya aktif jika stopwatch belum berjalan
+                  onPressed: _isRunning ? null : _startStopwatch,
                   child: const Text("Start"),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
-                  onPressed: _isRunning ? _stopStopwatch : null,  // Tombol Stop hanya aktif jika stopwatch berjalan
+                  onPressed: _isRunning ? _stopStopwatch : null,
                   child: const Text("Stop"),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
-                  onPressed: !_isRunning && _isStopped ? _resetStopwatch : null,  // Tombol Reset hanya aktif setelah berhenti
+                  onPressed: !_isRunning && _isStopped ? _resetStopwatch : null,
                   child: const Text("Reset"),
                 ),
               ],
